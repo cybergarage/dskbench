@@ -1,0 +1,143 @@
+This is a SCSI benchmark test program under ASPI. It can measure Hard-Disk,
+MO-Disk, CD-ROM drive's performance.
+
+All the part of this program are written by Borland C++ V3.1. Complete source
+files are included. By using its SCSI handling routine, you can write SCSI
+program very easily.
+
+
+How to use
+~~~~~~~~~~
+This program uses ASPI function call to handling SCSI, so you must add
+adequate ASPI manager to your config.sys. For example, if you are using
+Adaptec AHA-1542B, you must add ASPI4DOS.sys to your config.sys.
+
+To execute program, type "ASBENCH", then press <Enter> key. If your ASPI
+manager is working correctly, device select menu like below will appear.
+
+-------------------------------------------------------------------------------
+ASPI SCSI benchmark test V0.2
+ copyright(c) by Tsuru-Zoh, Nov.23,1992
+
+Target No.0 : HA#0 ID1  MAXTOR  LXT-535S        8.57  CCS1 Rigid
+Target No.1 : HA#0 ID2  MAXTOR  XT-8760S        B6B   CCS1 Rigid
+Target No.2 : HA#0 ID6  HITACHI CDR-3650/1650S  0003  CCS1 Removable
+
+Enter target number ( 0 to 2 ) : 
+-------------------------------------------------------------------------------
+
+The devices except HDD/MO/CD-ROM will not appear in this menu.
+Choose target number to test, then benchmark test will starts. For example,
+in this case if you want to test LXT-535S, press '0' and <Enter>. If you
+want to test CDR-3650, press '2' and <Enter>.
+
+
+This benchmark contains 6 tests. There are no data write operations in
+tests, so no data in device will be damaged.
+
+1: Test Unit Ready command overhead time
+2: Seek command to Logical block 0 overhead time (no motion seek)
+3: Sequential block seek command time
+4: Random block seek command time
+5: Sequential block read transfer rate
+6: Random block read transfer rate
+
+This program measures how many commands executed in 5 seconds. For example,
+the drive can execute Random Seek 350 times in 5 seconds, average random
+seek time is
+ 5 / 350[sec] = 14[ms]
+If the drive can execute 120 times of 8192 bytes sequential read in 5
+seconds, average transfer rate is
+ 8192 * 120 / 5 = 196 KB/s.
+
+This program displays performance rate by Bar-Graph, this value is based
+on Hard Disk performance rates that I think it's average value. So if you
+measure MO-Disk or CD-ROM drive, its performance rate becomes "Poor" or
+"OK", but it's no problem. Performance rate chart is below.
+
+Performance rate chart:
+                          Poor  |    OK    |   Good   |   Great   |   Superb
+Test Unit Ready command      >2.5ms>    >1.9ms>    >1.3ms>     >0.6ms>
+No Motion Seek command       >3.5ms>    >2.6ms>    >1.8ms>     >0.9ms>
+Sequential Seek              >10ms>     >7.5ms>      >5ms>     >2.5ms>
+Random Seek                  >40ms>     >30ms>      >20ms>      >10ms>
+Sequential Read            <400KB/s<    <800KB/s<  <1.2MB/s<   <1.6MB/s<
+Random Read                <300KB/s<    <600KB/s<  <900KB/s<   <1.2MB/s<
+
+Please notice that these results includes ASPI manager and SCSI Host
+Adapter's overhead time. For example, Adaptec's AHA-1542B has 1.5 to 2ms
+of command overhead time.
+
+
+Known Bugs:
+~~~~~~~~~~~
+Some of CD-ROM media contains several sector size (ex. 2048/2340Bytes).
+In that case, this program will be terminated by read error. If it occurred,
+please change CD-ROM media and try again.
+
+
+                      @TsuruZoh Tachibanaya    Nifty-Serve    ID : PEE00476
+                                                Compuserve     ID : 74440,476
+
+Freeware Licence
+~~~~~~~~~~~~~~~~
+This program, program sources, associated files may be copied, used and
+posted on any BBS without charge or permission. The program, program
+sources, associated files may not be modified, sold, or used as part of
+a commercial package without permission of the author.
+
+
+Appendix: How to use aspiscsi.c
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Here is a sample program to use aspiscsi.c. It read 1 sector from
+ "Host adapter No.0, SCSI-ID 0, SCSI logical block address(LBA) 0"
+then dump it. If you save this program as "test.c", please compile it
+like below.
+
+bcc test.c aspiscsi.c
+
+If you want to get detailed specs about ASPI, please access Adaptec BBS
+(1-408-945-7727). There are document file of ASPI specs for DOS
+(ASPIDOS.txt) in their Data Library.
+
+
+-----------------------------------------------------------------------
+#include <stdio.h>
+#include "aspi.h"
+
+#define HA_NO 0		// host adapter no. 0
+#define SCSI_ID 0	// target ID 0
+#define SCT_SIZE 512	// sector size is 512
+
+unsigned char _far buffer[ 1024 ];
+
+main()
+{
+	int i, j;
+
+	// initialize ASPI handler
+	if( AspiInit() ){
+		return( -1 );
+	}
+
+	// check target is ready or not
+	if( TestUnitReady( HA_NO, SCSI_ID ) ){
+		return( -1 );
+	}
+
+	// read 1 sector from LBA=0L
+	if( ScsiRead( HA_NO, SCSI_ID, 0L, SCT_SIZE, 1, buffer ) ){
+		return( -1 );
+	}
+
+	// dump data
+	for( i = 0; i < 512; i += 16 ){
+		for( j = 0; j < 16; j++ ){
+			printf( "%02x ", buffer[ i + j ] );
+		}
+		putchar( '\n' );
+	}
+	return( 0 );
+}
+-----------------------------------------------------------------------
+

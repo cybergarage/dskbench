@@ -1,0 +1,19 @@
+ASBench 0.7 is a modified version, from Gilles Vollant (info@winimage.com).
+
+I've added :
+- Sequential test at the end of disk (SeqRd End). The first sequential read (Seq. Read)
+are at the beginning of the disk, and the end is often slower...
+- There is now a DOS version (ASBN_DOS.EXE) and a Win32 console version (ASBNCH32.EXE).
+- CDWriter and Disk with ID > 7 (for Wide disk) are accepted.
+
+ASBN_DOS.EXE can be runned under MSDOS (with ASPI drivers) and Windows 95.
+ASBNCH32.EXE can be runned under Windows 95 and Windows NT, but you need the ASPI32 DLL
+from Adaptec. For this, get EZSCSI 4.01 package or the file ASPI32.EXE, at ADAPTEC
+compuserve forum or by FTP at : ftp://ftp.adaptec.com/pub/BBS/winnt/ASPI32.EXE
+
+In the source directory, you'll find asbench.mak (a Visual C++ 4 makefile for
+Win32 version) and makebc5.bat (batchfile for make the DOS version with Borland C) and
+as asbench.dsw (Visual C++ 6.0 Makefile).
+
+Visit http://www.winimage.com/asbench.htm and http://www.winimage.com/readfime.htm
+  for up to date info.

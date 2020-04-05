@@ -1,0 +1,21 @@
+This is a SCSI benchmark test program under ASPI. It can measure Hard-Disk,
+MO-Disk, CD-ROM drive's performance.
+
+README   1ST       524 93-02-24    0:08 ---- this file
+ASBENCH  EXE     18952 92-11-23    2:34 ---- executable file
+ASBENCH  TXT      5143 93-02-21    2:54 ---- document for ASBench.exe
+ASBENCH  C       11078 92-11-23    2:34 -+
+ASPI     H        2214 92-11-23    2:34 -+-- source files
+ASPISCSI C       12762 92-11-23    2:34 -+
+MAKEFILE            92 92-11-23    2:34 -+
+
+
+                      Å@TsuruZoh Tachibanaya    Nifty-Serve    ID : PEE00476
+                                                Compuserve     ID : 74440,476
+
+Version 0.7 now support Win32. Read WHATNEWS.TXT for more info.
+Version 0.7 modified by Gilles Vollant :
+                   Email          info@winimage.com
+                   Web page       http://www.winimage.com
+                   Web page       http://www.winimage.com/asbench.htm
+                   Web page       http://www.winimage.com/readfile.htm
